@@ -1,0 +1,28 @@
+Distance,,,,,,
+,Parme,La Spezia,Bologne,Florence,Perouse,Rome
+Parme,0,124,104,,,
+La Spezia,124,0,,163,,
+Bologne,104,,0,131,245,
+Florence,,163,131,0,150,283
+Perouse,,,245,150,0,181
+Rome,,,,283,181,0
+,,,,,,
+,,,,,,
+,,,,,,
+,Parme,La Spezia,Bologne,Florence,Perouse,Rome
+Parme,0,83,71,,,
+La Spezia,83,0,,106,,
+Bologne,71,,0,99,174,
+Florence,,106,99,0,103,168
+Perouse,,,174,103,0,127
+Rome,,,,168,127,0
+,,,,,,
+,,,,,,
+Cout,,,,,,
+,Parme,La Spezia,Bologne,Florence,Perouse,Rome
+Parme,0,25,16,,,
+La Spezia,25,0,,43,,
+Bologne,16,,0,22,30,
+Florence,,43,22,0,20,42
+Perouse,,,30,20,0,22
+Rome,,,,42,22,0

@@ -1,99 +1,102 @@
 
 const printTable = (table) => {
   return Object.keys(table)
-    .map((vertex) => {
-      var { vertex: from, cost } = table[vertex];
-      return `${vertex}: ${cost} via ${from}`;
+    .map((sommet) => {
+      var { sommet: de, cout } = table[sommet];
+      return `${sommet}: ${cout} via ${de}`;
     })
     .join("\n");
 };
 
-const tracePath = (table, start, end) => {
-  var path = [];
-  var next = end;
+//afficher le parcours
+const afficherParcours = (tab, depart, arrive) => {
+  var chemin = [];
+  var suivant= arrive;
   while (true) {
-    path.unshift(next);
-    if (next === start) {
+    chemin.unshift(suivant);
+    if (suivant === depart) {
       break;
     }
-    next = table[next].vertex;
+    suivant = tab[suivant].sommet;
   }
 
-  return path;
+  return chemin;
 };
 
-const formatGraph = (g) => {
-  const tmp = {};
-  Object.keys(g).forEach((k) => {
-    const obj = g[k];
-    const arr = [];
-    Object.keys(obj).forEach((v) => arr.push({ vertex: v, cost: obj[v] }));
-    tmp[k] = arr;
+
+//on rassemble pour chaque noeud ses voisins respectifs
+const formatGraph = (graphe) => {
+  let tmp = {};
+  Object.keys(graphe).forEach((k) => {
+    let obj = graphe[k];
+    let tab = [];
+    Object.keys(obj).forEach((s) => tab.push({ sommet: s, cout: obj[s] }));
+    tmp[k] = tab;
   });
+  console.log(tmp);
   return tmp;
 };
 
-const dijkstra = (graph, start, end) => {
+
+const dijkstra = (graph, depart, arrive) => {
   var map = formatGraph(graph);
 
   var visited = [];
-  var unvisited = [start];
-  var shortestDistances = { [start]: { vertex: start, cost: 0 } };
+  var unvisited = [depart];
 
-  var vertex;
-  while ((vertex = unvisited.shift())) {
+  var plusCourtChemins = { [depart]: { sommet: depart, cout: 0 } };
+
+  var sommet;
+  while ((sommet = unvisited.shift())) {
     // Explore unvisited neighbors
-    var neighbors = map[vertex].filter((n) => !visited.includes(n.vertex));
+    var voisins = map[sommet].filter((n) => !visited.includes(n.sommet));
 
     // Add neighbors to the unvisited list
-    unvisited.push(...neighbors.map((n) => n.vertex));
+    unvisited.push(...voisins.map((n) => n.sommet));
 
-    var costToVertex = shortestDistances[vertex].cost;
+    var costToVertex = plusCourtChemins[sommet].cout;
 
-    for (let { vertex: to, cost } of neighbors) {
-      var currCostToNeighbor =
-        shortestDistances[to] && shortestDistances[to].cost;
-      var newCostToNeighbor = costToVertex + cost;
+    for (let { sommet: to, cout } of voisins) {
+      var coutVoisin =
+        plusCourtChemins[to] && plusCourtChemins[to].cout;
+      var newCoutVoisin = costToVertex + cout;
       if (
-        currCostToNeighbor == undefined ||
-        newCostToNeighbor < currCostToNeighbor
+        coutVoisin == undefined ||
+        newCoutVoisin < coutVoisin
       ) {
         // Update the table
-        shortestDistances[to] = { vertex, cost: newCostToNeighbor };
+        plusCourtChemins[to] = { sommet, cout: newCoutVoisin };
       }
     }
 
-    visited.push(vertex);
+    visited.push(sommet);
   }
 
   console.log("Table of costs:");
-  console.log(printTable(shortestDistances));
+  console.log(printTable(plusCourtChemins));
 
-  const path = tracePath(shortestDistances, start, end);
+  const path = afficherParcours(plusCourtChemins, depart, arrive);
 
   console.log(
-    "Shortest path is: ",
+    "Le plus court chemin: ",
     path.join(" -> "),
-    " with weight ",
-    shortestDistances[end].cost
+    " il coute: ",
+    plusCourtChemins[arrive].cout
   );
 };
 
 
 //distance
-// let graph = {
-// 	Parme: { LaSpezia: 124, Bologne: 104 },
-// 	LaSpezia: { Parme: 124, Florence: 163},
-// 	Bologne: { Parme: 104, Florence: 131, Perouse: 245 },
-// 	Florence: { LaSpezia: 163, Bologne: 131, Perouse: 150, Rome: 283 },
-// 	Perouse: { Bologne: 245, Florence: 150, Rome: 181 },
-// 	Rome: { Florence: 283, Perouse: 181},
-// };
+const graph = {
+	Parme: { LaSpezia: 124, Bologne: 104 },
+	LaSpezia: { Parme: 124, Florence: 163},
+	Bologne: { Parme: 104, Florence: 131, Perouse: 245 },
+	Florence: { LaSpezia: 163, Bologne: 131, Perouse: 150, Rome: 283 },
+	Perouse: { Bologne: 245, Florence: 150, Rome: 181 },
+	Rome: { Florence: 283, Perouse: 181},
+};
 
-// dijkstra(graph, "Parme", "Rome");
-
-
-
+//dijkstra(graph, "Parme", "Rome");
 
 //temps
 // let graph = {
@@ -109,15 +112,15 @@ const dijkstra = (graph, start, end) => {
 
 
 //cout
-let graph = {
-	Parme: { LaSpezia: 25, Bologne: 16 },
-	LaSpezia: { Parme: 25, Florence: 43},
-	Bologne: { Parme: 16, Florence: 22, Perouse: 30 },
-	Florence: { LaSpezia: 43, Bologne: 22, Perouse: 20, Rome: 42 },
-	Perouse: { Bologne: 30, Florence: 20, Rome: 22 },
-	Rome: { Florence: 42, Perouse: 22},
-};
-dijkstra(graph,"Rome", "Parme");
+// let graph = {
+// 	Parme: { LaSpezia: 25, Bologne: 16 },
+// 	LaSpezia: { Parme: 25, Florence: 43},
+// 	Bologne: { Parme: 16, Florence: 22, Perouse: 30 },
+// 	Florence: { LaSpezia: 43, Bologne: 22, Perouse: 20, Rome: 42 },
+// 	Perouse: { Bologne: 30, Florence: 20, Rome: 22 },
+// 	Rome: { Florence: 42, Perouse: 22},
+// };
+//dijkstra(graph,"Rome", "Parme");
 
 // //cout
 // let graph = {
@@ -128,11 +131,6 @@ dijkstra(graph,"Rome", "Parme");
 // 	D: { finish: 1 },
 // 	finish: {},
 // };
-// console.log(findShortestPath(graph, "start", "finish"));
-// > {
-// distance: 1
-// path: (2) ["A", "start"]
-// }
 
 
 // // importer le module readline 
